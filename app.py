@@ -42,10 +42,15 @@ def get_result(image):
     image = Image.open(image)
     image = image.resize((128, 128))
     image = np.array(image)
-    input_img = np.expand_dims(image, axis=0)
+    
+    # Ensure the image has three channels
+    if image.ndim == 2:  # If the image is grayscale
+        image = np.stack((image,)*3, axis=-1)  # Convert to RGB by stacking
+
+    input_img = np.expand_dims(image, axis=0)  # Add batch dimension
     result = model_03.predict(input_img)
     result_class = np.argmax(result, axis=1)
-    return result_class
+    return result_class[0]  # Return the class index directly
 
 # Streamlit app
 st.title("Pneumonia Detection Web App")
