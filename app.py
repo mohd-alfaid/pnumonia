@@ -46,8 +46,13 @@ def get_result(image):
     # Ensure the image has three channels
     if image.ndim == 2:  # If the image is grayscale
         image = np.stack((image,)*3, axis=-1)  # Convert to RGB by stacking
-
+    elif image.shape[2] == 1:  # If the image has only one channel
+        image = np.concatenate([image, image, image], axis=-1)  # Convert to RGB
+    
+    # Ensure the shape is (1, 128, 128, 3)
     input_img = np.expand_dims(image, axis=0)  # Add batch dimension
+    input_img = input_img.astype('float32') / 255.0  # Normalize the image
+    
     result = model_03.predict(input_img)
     result_class = np.argmax(result, axis=1)
     return result_class[0]  # Return the class index directly
