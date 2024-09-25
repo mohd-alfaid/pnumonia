@@ -23,7 +23,7 @@ output = Dense(2, activation='softmax')(class_2)
 model_03 = Model(inputs=base_model.input, outputs=output)
 
 # Load model weights from the Desktop
-model_path = '/Users/mohdalfaid/Desktop/pneumonia/vgg_unfrozen.h5'
+model_path = '/Users/mohdalfaid/Desktop/pneumonia/vgg19_model_02.h5
 try:
     model_03.load_weights(model_path)
     print("Model weights loaded successfully.")
