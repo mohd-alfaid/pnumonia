@@ -1,0 +1,11 @@
+## Requirements
+To run the web app, make sure you have the following installed:
+
+- Python 3.7 or higher
+- TensorFlow 2.x
+- Streamlit
+- OpenCV
+- Pillow (PIL)
+- NumPy
+
+You can install all the required libraries using the `requirements.txt` file.
