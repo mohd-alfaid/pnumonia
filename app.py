@@ -1,28 +1,34 @@
 import os
 import numpy as np
 from PIL import Image
-import cv2
 import streamlit as st
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Flatten, Dense, Dropout
 from tensorflow.keras.applications.vgg19 import VGG19
 
-# Load VGG19 model
+# Load VGG19 model without the top layers
 base_model = VGG19(include_top=False, input_shape=(128, 128, 3))
 
-# Adding custom layers
+# Define the new architecture
 x = base_model.output
 flat = Flatten()(x)
-class_1 = Dense(4608, activation='relu')(flat)  # Ensure this matches the original model's architecture
+
+# Ensure these dense layers match the saved model architecture
+class_1 = Dense(4608, activation='relu')(flat)
 drop_out = Dropout(0.2)(class_1)
-class_2 = Dense(1152, activation='relu')(drop_out)  # Ensure this matches the original model's architecture
+class_2 = Dense(1152, activation='relu')(drop_out)
 output = Dense(2, activation='softmax')(class_2)
 
-# Final model
+# Create the final model
 model_03 = Model(inputs=base_model.input, outputs=output)
 
-# Load model weights from Desktop
-model_03.load_weights('/Users/mohdalfaid/Desktop/pneumonia/vgg_unfrozen.h5')
+# Load model weights from the Desktop
+model_path = '/Users/mohdalfaid/Desktop/pneumonia/vgg_unfrozen.h5'
+try:
+    model_03.load_weights(model_path)
+    print("Model weights loaded successfully.")
+except Exception as e:
+    print(f"Error loading weights: {e}")
 
 # Function to classify the result
 def get_class_name(class_no):
