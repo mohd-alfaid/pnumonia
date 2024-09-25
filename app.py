@@ -39,20 +39,25 @@ def get_class_name(class_no):
 
 # Function to predict result based on image
 def get_result(image):
+    # Open and process the uploaded image
     image = Image.open(image)
     image = image.resize((128, 128))
+
+    # Convert image to array and ensure it has three channels
     image = np.array(image)
     
-    # Ensure the image has three channels
-    if image.ndim == 2:  # If the image is grayscale
-        image = np.stack((image,)*3, axis=-1)  # Convert to RGB by stacking
-    elif image.shape[2] == 1:  # If the image has only one channel
+    if image.ndim == 2:  # Grayscale image
+        image = np.stack((image,) * 3, axis=-1)  # Convert to RGB
+    elif image.shape[2] == 1:  # Single channel image
         image = np.concatenate([image, image, image], axis=-1)  # Convert to RGB
-    
+
     # Ensure the shape is (1, 128, 128, 3)
     input_img = np.expand_dims(image, axis=0)  # Add batch dimension
+
+    # Print the shape for debugging
+    print("Input image shape:", input_img.shape)
+
     input_img = input_img.astype('float32') / 255.0  # Normalize the image
-    
     result = model_03.predict(input_img)
     result_class = np.argmax(result, axis=1)
     return result_class[0]  # Return the class index directly
