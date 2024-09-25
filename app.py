@@ -7,17 +7,21 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Flatten, Dense, Dropout
 from tensorflow.keras.applications.vgg19 import VGG19
 
-# Load model weights from Desktop
-model_03 = VGG19(include_top=False, input_shape=(128, 128, 3))
-x = model_03.output
-flat = Flatten()(x)
-class_1 = Dense(4608, activation='relu')(flat)
-drop_out = Dropout(0.2)(class_1)
-class_2 = Dense(1152, activation='relu')(drop_out)
-output = Dense(2, activation='softmax')(class_2)
-model_03 = Model(model_03.inputs, output)
+# Load VGG19 model
+base_model = VGG19(include_top=False, input_shape=(128, 128, 3))
 
-# Update the path to the weights file
+# Adding custom layers
+x = base_model.output
+flat = Flatten()(x)
+class_1 = Dense(4608, activation='relu')(flat)  # Ensure this matches the original model's architecture
+drop_out = Dropout(0.2)(class_1)
+class_2 = Dense(1152, activation='relu')(drop_out)  # Ensure this matches the original model's architecture
+output = Dense(2, activation='softmax')(class_2)
+
+# Final model
+model_03 = Model(inputs=base_model.input, outputs=output)
+
+# Load model weights from Desktop
 model_03.load_weights('/Users/mohdalfaid/Desktop/pneumonia/vgg_unfrozen.h5')
 
 # Function to classify the result
