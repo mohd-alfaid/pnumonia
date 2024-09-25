@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Input, Flatten, Dense, Dropout
 from tensorflow.keras.applications.vgg19 import VGG19
 
 # Load VGG19 model without the top layers
-base_model = VGG19(include_top=False, input_shape=(128, 128, 3))
+base_model = VGG19(include_top=False, input_shape=(None, 128, 128, 3))
 
 # Define the new architecture
 x = base_model.output
